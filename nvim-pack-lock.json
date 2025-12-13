@@ -12,6 +12,10 @@
       "rev": "b74fab3656eea9de20a9b8116afa3cfc4ec09657",
       "src": "https://github.com/hrsh7th/cmp-buffer"
     },
+    "cmp-luasnip": {
+      "rev": "98d9cb5c2c38532bd9bdb481067b20fea8f32e90",
+      "src": "https://github.com/saadparwaiz1/cmp_luasnip"
+    },
     "cmp-nvim-lsp": {
       "rev": "cbc7b02bb99fae35cb42f514762b89b5126651ef",
       "src": "https://github.com/hrsh7th/cmp-nvim-lsp"
@@ -31,6 +35,10 @@
     "lspconfig": {
       "rev": "a2bd1cf7b0446a7414aaf373cea5e4ca804c9c69",
       "src": "https://github.com/neovim/nvim-lspconfig"
+    },
+    "luasnip": {
+      "rev": "3732756842a2f7e0e76a7b0487e9692072857277",
+      "src": "https://github.com/L3MON4D3/LuaSnip"
     },
     "mason": {
       "rev": "57e5a8addb8c71fb063ee4acda466c7cf6ad2800",
@@ -63,6 +71,10 @@
     "tmux-navigator": {
       "rev": "c45243dc1f32ac6bcf6068e5300f3b2b237e576a",
       "src": "https://github.com/christoomey/vim-tmux-navigator"
+    },
+    "tokyonight": {
+      "rev": "5da1b76e64daf4c5d410f06bcb6b9cb640da7dfd",
+      "src": "https://github.com/folke/tokyonight.nvim"
     },
     "treesitter": {
       "rev": "42fc28ba918343ebfd5565147a42a26580579482",

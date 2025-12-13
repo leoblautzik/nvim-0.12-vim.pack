@@ -34,17 +34,10 @@ vim.api.nvim_create_autocmd("BufReadPost", {
 --------------------------------------------------------------------------------
 -- Alternar relativenumber en normal mode -> absolute en insert
 --------------------------------------------------------------------------------
-vim.api.nvim_create_autocmd({ "InsertEnter" }, {
-	pattern = "*",
-	callback = function()
-		vim.wo.relativenumber = false
-		vim.wo.number = true
-	end,
-})
-vim.api.nvim_create_autocmd({ "InsertLeave" }, {
-	pattern = "*",
-	callback = function()
-		vim.wo.relativenumber = true
+vim.api.nvim_create_autocmd({ "InsertEnter", "InsertLeave" }, {
+	callback = function(ev)
+		local entering = ev.event == "InsertEnter"
+		vim.wo.relativenumber = not entering
 		vim.wo.number = true
 	end,
 })
@@ -52,13 +45,13 @@ vim.api.nvim_create_autocmd({ "InsertLeave" }, {
 --------------------------------------------------------------------------------
 --  Quitar números en terminal
 --------------------------------------------------------------------------------
+local grp = vim.api.nvim_create_augroup("custom-term-open", { clear = true })
+
 vim.api.nvim_create_autocmd("TermOpen", {
-	group = vim.api.nvim_create_augroup("custom-term-open", {
-		clear = true,
-	}),
+	group = grp,
 	callback = function()
-		vim.opt.number = false
-		vim.opt.relativenumber = false
+		vim.wo.number = false
+		vim.wo.relativenumber = false
 		vim.cmd.startinsert()
 	end,
 })

@@ -32,14 +32,13 @@ o.signcolumn = "yes" -- Always show sign column
 o.showmatch = true -- Highlight matching brackets
 o.matchtime = 2 -- How long to show matching bracket
 o.cmdheight = 1 -- Command line height
-o.completeopt = "menuone,noinsert,noselect" -- Completion options
-o.showmode = false -- Don't show mode in command line
+o.completeopt = "menuone,menu,noselect" -- Completion options
+o.showmode = true -- Don't show mode in command line
 o.pumheight = 10 -- Popup menu height
-o.pumblend = 10 -- Popup menu transparency
+o.pumblend = 0 -- Popup menu transparency
 o.winblend = 0 -- Floating window transparency
 o.conceallevel = 0 -- Don't hide markup
 o.concealcursor = "" -- Don't hide cursor line markup
-o.lazyredraw = true -- Don't redraw during macros
 o.synmaxcol = 300 -- Syntax highlighting limit
 o.winborder = "rounded"
 o.fillchars:append({ eob = " " })
@@ -50,7 +49,7 @@ o.writebackup = false -- Don't create backup before writing
 o.swapfile = false -- Don't create swap files
 o.undofile = true -- Persistent undo
 o.updatetime = 300 -- Faster completion
-o.timeoutlen = 500 -- Key timeout duration
+o.timeoutlen = 800 -- Key timeout duration
 o.ttimeoutlen = 0 -- Key code timeout
 o.autoread = true -- Auto reload files changed outside vim
 o.autowrite = false -- Don't auto save
@@ -71,4 +70,5 @@ o.guicursor = {
 	"sm:block-blinkwait175-blinkoff150-blinkon175",
 }
 
-o.laststatus = 3
+o.laststatus = 1
+vim.g.netrw_liststyle = 3
