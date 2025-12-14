@@ -19,10 +19,10 @@ map("i", "jj", "<Esc>", { noremap = true, silent = true })
 --   end
 -- end
 
-vim.keymap.set('n', '<C-h>', '<C-w><C-h>', { desc = 'Move focus to the left window' })
-vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
-vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
-vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+vim.keymap.set("n", "<C-h>", "<C-w><C-h>", { desc = "Move focus to the left window" })
+vim.keymap.set("n", "<C-l>", "<C-w><C-l>", { desc = "Move focus to the right window" })
+vim.keymap.set("n", "<C-j>", "<C-w><C-j>", { desc = "Move focus to the lower window" })
+vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper window" })
 
 -------------------------------------------------------------------------------
 -- Habilitar la tecla Del para cerrar el buffer actual
@@ -165,4 +165,18 @@ map("n", "<leader>fd", "<cmd>Telescope diagnostics<CR>", { desc = "Buscar diagnÃ
 map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
 map("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Cambios sin commit" })
 map("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", { desc = "Ramas" })
+--------------------------------------------------------------------------------
+-- Alternar tema claro/orcuro
+--
+vim.keymap.set("n", "<leader>t", function()
+	local cs = vim.g.colors_name or ""
+
+	if cs:match("^catppuccin") then
+		vim.cmd("colorscheme delek")
+		vim.o.background = "light"
+	else
+		vim.cmd("colorscheme catppuccin-mocha")
+		vim.o.background = "dark"
+	end
+end, { desc = "Toggle theme (catppuccin â†” delek)" })
 --------------------------------------------------------------------------------

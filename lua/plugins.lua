@@ -8,7 +8,9 @@
 vim.pack.add({
 
 	-- Tema
-	{ src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
+	{ src = "https://github.com/catppuccin/nvim", name = "catppuccin" },
+	-- { src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
+	-- { src = "https://github.com/folke/tokyonight.nvim", name = "tokyonight"
 
 	-- Utilities
 	{ src = "https://github.com/nvim-lua/plenary.nvim", name = "plenary" },
@@ -29,10 +31,18 @@ vim.pack.add({
 -- =========================
 -- THEME
 -- =========================
-require("rose-pine").setup({
-	styles = { bold = false, italic = true, transparency = false },
+require("catppuccin").setup({
+	auto_integrations = true,
 })
-vim.cmd("colorscheme rose-pine")
+vim.cmd("colorscheme catppuccin-mocha")
+--
+-- require("rose-pine").setup({
+-- 	styles = { bold = false, italic = true, transparency = false },
+-- })
+-- vim.cmd("colorscheme rose-pine")
+
+-- require("tokyonight").setup({})
+-- vim.cmd("colorscheme tokyonight-storm")
 
 -- =========================
 -- TREESITTER
@@ -62,7 +72,7 @@ require("nvim-autopairs").setup({})
 -- =========================
 require("mason").setup()
 require("mason-lspconfig").setup({
-	ensre_installed = { "pyright", "ruff", "gopls", "clangd", "lua_ls", "stylua" },
+	ensure_installed = { "pyright", "ruff", "gopls", "clangd", "lua_ls", "stylua" },
 })
 
 -- =========================
@@ -149,6 +159,10 @@ vim.lsp.enable("ruff")
 vim.api.nvim_create_autocmd("LspAttach", {
 	callback = function(args)
 		local client = vim.lsp.get_client_by_id(args.data.client_id)
+		-- Pyright NO formatea
+		if client and client.name == "pyright" and client.server_capabilities then
+			client.server_capabilities.documentFormattingProvider = false
+		end
 		if client and client.server_capabilities.documentFormattingProvider then
 			vim.api.nvim_buf_create_user_command(args.buf, "Format", function()
 				vim.lsp.buf.format({
