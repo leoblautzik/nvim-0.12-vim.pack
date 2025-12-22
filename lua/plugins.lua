@@ -19,8 +19,8 @@ vim.pack.add({
 	{ src = "https://github.com/christoomey/vim-tmux-navigator", name = "tmux-navigator" },
 	{ src = "https://github.com/windwp/nvim-autopairs", name = "autopairs" },
 	-- LSP & Autocompletado
-	{ src = "https://github.com/williamboman/mason.nvim", name = "mason" },
-	{ src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig" },
+	-- { src = "https://github.com/williamboman/mason.nvim", name = "mason" },
+	-- { src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig" },
 	{ src = "https://github.com/neovim/nvim-lspconfig", name = "lspconfig" },
 	{ src = "https://github.com/hrsh7th/nvim-cmp", name = "cmp" },
 	{ src = "https://github.com/hrsh7th/cmp-nvim-lsp", name = "cmp-nvim-lsp" },
@@ -70,10 +70,10 @@ require("nvim-autopairs").setup({})
 -- =========================
 -- MASON
 -- =========================
-require("mason").setup()
-require("mason-lspconfig").setup({
-	ensure_installed = { "pyright", "ruff", "gopls", "clangd", "lua_ls", "stylua" },
-})
+-- require("mason").setup()
+-- require("mason-lspconfig").setup({
+-- 	ensure_installed = { "pyright", "ruff", "gopls", "clangd", "lua_ls", "stylua" },
+-- })
 
 -- =========================
 -- CMP (autocompletado)
@@ -187,7 +187,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
 -- DIAGNÓSTICOS
 -- =========================
 vim.diagnostic.config({
-	signs = true,
+	signs = {
+		text = {
+			[vim.diagnostic.severity.ERROR] = "",
+			[vim.diagnostic.severity.WARN] = "",
+			[vim.diagnostic.severity.INFO] = "󰋼",
+			[vim.diagnostic.severity.HINT] = "󰌵",
+		},
+	},
+	underline = true,
 	-- virtual_text = true,
 	update_in_insert = false,
 	virtual_lines = {
