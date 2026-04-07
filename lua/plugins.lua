@@ -50,7 +50,7 @@ vim.cmd("colorscheme catppuccin-mocha")
 require("nvim-treesitter.configs").setup({
   ensure_installed = { "lua", "vim", "bash", "json", "python", "go", "c", "cpp", "markdown" },
   highlight = { enable = true },
-  indent = { enable = true, disable = { "c" }, },
+  indent = { enable = true, disable = { "c", "cpp" }, },
   modules = {},
   sync_install = false,
   ignore_install = {},
