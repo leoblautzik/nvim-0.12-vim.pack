@@ -1,7 +1,7 @@
 local utils = require("utils")
 local map = vim.keymap.set
 
-vim.g.mapleader = " " -- Leader key
+vim.g.mapleader = " "      -- Leader key
 vim.g.maplocalleader = " " -- Set local leader key (NEW)
 
 map("n", "<leader>zz", ":wqa<CR>", { silent = true })
@@ -28,10 +28,10 @@ vim.keymap.set("n", "<C-k>", "<C-w><C-k>", { desc = "Move focus to the upper win
 -- Habilitar la tecla Del para cerrar el buffer actual
 -------------------------------------------------------------------------------
 map("n", "<C-x>", function()
-	local choice = vim.fn.confirm("¿Cerrar el buffer actual?", "&Sí\n&No", 2)
-	if choice == 1 then
-		vim.cmd("bdelete")
-	end
+  local choice = vim.fn.confirm("¿Cerrar el buffer actual?", "&Sí\n&No", 2)
+  if choice == 1 then
+    vim.cmd("bdelete")
+  end
 end, { noremap = true, silent = true, desc = "Cerrar buffer con confirmación" })
 
 -------------------------------------------------------------------------------
@@ -51,9 +51,9 @@ map("v", "<C-c>", '"+y', { noremap = true, silent = true })
 -- Copia todo el contenido del archivo al portapapeles del sistema sin mover
 -- el cursor
 map("n", "<C-a>", function()
-	local pos = vim.api.nvim_win_get_cursor(0)
-	vim.cmd('normal! ggVG"+y')
-	vim.api.nvim_win_set_cursor(0, pos)
+  local pos = vim.api.nvim_win_get_cursor(0)
+  vim.cmd('normal! ggVG"+y')
+  vim.api.nvim_win_set_cursor(0, pos)
 end, { desc = "Copiar todo sin mover cursor" })
 
 -------------------------------------------------------------------------------
@@ -61,20 +61,20 @@ end, { desc = "Copiar todo sin mover cursor" })
 -------------------------------------------------------------------------------
 -- Toggle netrw con \
 map("n", "<leader>\\", function()
-	if vim.bo.filetype == "netrw" then
-		vim.cmd("bd")
-	else
-		vim.cmd("Explore")
-	end
+  if vim.bo.filetype == "netrw" then
+    vim.cmd("bd")
+  else
+    vim.cmd("Explore")
+  end
 end, { desc = "Toggle netrw" })
 
 -- Toggle netrw con leader n
 map("n", "<C-n>", function()
-	if vim.bo.filetype == "netrw" then
-		vim.cmd("bd")
-	else
-		vim.cmd("Explore")
-	end
+  if vim.bo.filetype == "netrw" then
+    vim.cmd("bd")
+  else
+    vim.cmd("Explore")
+  end
 end, { desc = "Toggle netrw" })
 -------------------------------------------------------------------------------
 
@@ -101,22 +101,22 @@ map("n", "Y", "y$", { desc = "Yank to end of line" })
 
 -- Diagnóstico y quickfix
 map("n", "<leader>q", function()
-	local winid = vim.fn.getqflist({ winid = 0 }).winid
-	if winid ~= 0 then
-		vim.cmd.cclose()
-	else
-		vim.diagnostic.setqflist()
-		vim.cmd.copen()
-	end
+  local winid = vim.fn.getqflist({ winid = 0 }).winid
+  if winid ~= 0 then
+    vim.cmd.cclose()
+  else
+    vim.diagnostic.setqflist()
+    vim.cmd.copen()
+  end
 end, { desc = "Toggle Quickfix con diagnósticos" })
 
 -------------------------------------------------------------------------------
 -- Copy Full File-Path
 -------------------------------------------------------------------------------
 map("n", "<leader>pp", function()
-	local path = vim.fn.expand("%:p")
-	vim.fn.setreg("+", path)
-	print("file:", path)
+  local path = vim.fn.expand("%:p")
+  vim.fn.setreg("+", path)
+  print("file:", path)
 end, { desc = "Copy full file-path" })
 
 -------------------------------------------------------------------------------
@@ -134,7 +134,7 @@ map("n", "<leader>ex", utils.run_file, { desc = "Ejecutar archivo actual" })
 map("n", "<leader>tgn", utils.run_test_under_cursor, { desc = "Go: test bajo cursor" })
 -- map('n', '<leader>tga', utils.run_tests_in_file, { desc = 'Go: todos los tests del archivo' })
 map("n", "<leader>tga", function()
-	utils.run_tests_in_file(true)
+  utils.run_tests_in_file(true)
 end, { desc = "Go: tests archivo (verbose)" })
 
 -- Python Test
@@ -143,12 +143,12 @@ map("n", "<leader>tpa", utils.run_pytests_in_file, { desc = "Py: todos los tests
 
 -- Cerrar panel de ejecución
 map("n", "<leader>ec", function()
-	if vim.g.runner_win and vim.api.nvim_win_is_valid(vim.g.runner_win) then
-		vim.api.nvim_win_close(vim.g.runner_win, true)
-		vim.g.runner_win = nil
-	else
-		print("No hay panel de ejecución activo")
-	end
+  if vim.g.runner_win and vim.api.nvim_win_is_valid(vim.g.runner_win) then
+    vim.api.nvim_win_close(vim.g.runner_win, true)
+    vim.g.runner_win = nil
+  else
+    print("No hay panel de ejecución activo")
+  end
 end, { desc = "Cerrar panel runner" })
 
 --------------------------------------------------------------------------------
@@ -168,15 +168,15 @@ map("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", { desc = "Ramas" })
 --------------------------------------------------------------------------------
 -- Alternar tema claro/orcuro
 --
-vim.keymap.set("n", "<leader>t", function()
-	local cs = vim.g.colors_name or ""
+vim.keymap.set("n", "<leader>bg", function()
+  local cs = vim.g.colors_name or ""
 
-	if cs:match("^catppuccin") then
-		vim.cmd("colorscheme delek")
-		vim.o.background = "light"
-	else
-		vim.cmd("colorscheme catppuccin-mocha")
-		vim.o.background = "dark"
-	end
+  if cs:match("^catppuccin") then
+    vim.cmd("colorscheme lunaperche")
+    vim.o.background = "light"
+  else
+    vim.cmd("colorscheme catppuccin-mocha")
+    vim.o.background = "dark"
+  end
 end, { desc = "Toggle theme (catppuccin ↔ delek)" })
 --------------------------------------------------------------------------------

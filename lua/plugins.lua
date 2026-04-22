@@ -18,6 +18,11 @@ vim.pack.add({
   { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" },
   { src = "https://github.com/christoomey/vim-tmux-navigator",  name = "tmux-navigator" },
   { src = "https://github.com/windwp/nvim-autopairs",           name = "autopairs" },
+  { src = "https://github.com/nvim-neotest/neotest",            name = "neotest" },
+  { src = "https://github.com/nvim-neotest/nvim-nio",           name = "nvim-nio" },
+  { src = "https://github.com/nvim-neotest/neotest-python",     name = "neotest-python" },
+  { src = "https://github.com/antoinemadec/FixCursorHold.nvim", name = "fix-cursor-hold" },
+
   -- LSP & Autocompletado
   -- { src = "https://github.com/williamboman/mason.nvim", name = "mason" },
   -- { src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig" },
@@ -66,6 +71,12 @@ require("telescope").setup({})
 -- AUTOPAIRS
 -- =========================
 require("nvim-autopairs").setup({})
+
+require("neotest").setup({
+  adapters = {
+    require("neotest-python")({})
+  }
+})
 
 -- =========================
 -- MASON
