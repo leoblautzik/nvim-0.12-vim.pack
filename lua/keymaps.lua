@@ -76,6 +76,11 @@ map("n", "<C-n>", function()
     vim.cmd("Explore")
   end
 end, { desc = "Toggle netrw" })
+
+-------------------------------------------------------------------------------
+--- UndotreeToggle
+
+map('n', '<leader><F5>', vim.cmd.UndotreeToggle)
 -------------------------------------------------------------------------------
 
 -- Navegación insert mode
@@ -179,4 +184,23 @@ vim.keymap.set("n", "<leader>bg", function()
     vim.o.background = "dark"
   end
 end, { desc = "Toggle theme (catppuccin ↔ delek)" })
+---
+--------------------------------------------------------------------------------
+-- NEOTEST
+--------------------------------------------------------------------------------
+vim.keymap.set("n", "<leader>tn", function()
+  require("neotest").run.run()
+end, {})
+-- Test All
+vim.keymap.set("n", "<leader>ta", function()
+  require("neotest").run.run(vim.fn.expand("%"))
+end, {})
+-- Test summary toggle
+vim.keymap.set("n", "<leader>ts", function()
+  require("neotest").summary.toggle()
+end, {})
+-- Test Info
+vim.keymap.set("n", "<leader>ti", function()
+  require("neotest").output.open({ enter = true })
+end, {})
 --------------------------------------------------------------------------------

@@ -62,14 +62,14 @@ o.splitright = true -- Vertical splits go right
 
 -- Cursor setting
 o.guicursor = {
-  "n-v-c:block",                                          -- bloque en normal, visual y command
-  "i-ci-ve:ver30",                                        -- palito en insert, command-insert, visual-ex
-  "r-cr:hor20",                                           -- guion bajo en replace
-  "o:hor50",                                              -- guion bajo en operator-pending
-  "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor", -- parpadeo y resalte
+  "n-v-c:block",                                            -- bloque en normal, visual y command
+  "i-ci-ve:ver30",                                          -- palito en insert, command-insert, visual-ex
+  "r-cr:hor20",                                             -- guion bajo en replace
+  "o:hor50",                                                -- guion bajo en operator-pending
+  "a:blinkwait700-blinkoff400-blinkon250-Cursor/lCursor",   -- parpadeo y resalte
   "sm:block-blinkwait175-blinkoff150-blinkon175",
 }
 
-o.laststatus = 1
+o.laststatus = 2
 
 -- vim.g.netrw_liststyle = 3

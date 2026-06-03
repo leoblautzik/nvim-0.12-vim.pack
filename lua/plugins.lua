@@ -2,42 +2,42 @@
 --  plugins.lua - Neovim 0.12 (sin lazy)
 -- ============================================================
 
--- =========================
 -- PACK
--- =========================
 vim.pack.add({
 
   -- Tema
-  { src = "https://github.com/catppuccin/nvim",                 name = "catppuccin" },
-  -- { src = "https://github.com/rose-pine/neovim", name = "rose-pine" },
-  -- { src = "https://github.com/folke/tokyonight.nvim", name = "tokyonight"
+  { src = "https://github.com/catppuccin/nvim",                   name = "catppuccin" },
+  { src = "https://github.com/rose-pine/neovim",                  name = "rose-pine" },
+  { src = "https://github.com/folke/tokyonight.nvim",             name = "tokyonight" },
 
   -- Utilities
-  { src = "https://github.com/nvim-lua/plenary.nvim",           name = "plenary" },
-  { src = "https://github.com/nvim-telescope/telescope.nvim",   name = "telescope" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter", name = "treesitter" },
-  { src = "https://github.com/christoomey/vim-tmux-navigator",  name = "tmux-navigator" },
-  { src = "https://github.com/windwp/nvim-autopairs",           name = "autopairs" },
-  { src = "https://github.com/nvim-neotest/neotest",            name = "neotest" },
-  { src = "https://github.com/nvim-neotest/nvim-nio",           name = "nvim-nio" },
-  { src = "https://github.com/nvim-neotest/neotest-python",     name = "neotest-python" },
-  { src = "https://github.com/antoinemadec/FixCursorHold.nvim", name = "fix-cursor-hold" },
+  { src = "https://github.com/mbbill/undotree",                   name = "undotree" },
+  { src = "https://github.com/nvim-lua/plenary.nvim",             name = "plenary" },
+  { src = "https://github.com/nvim-telescope/telescope.nvim",     name = "telescope" },
+  { src = "https://github.com/romus204/tree-sitter-manager.nvim", name = "tree-sitter-manager" },
+  { src = "https://github.com/christoomey/vim-tmux-navigator",    name = "tmux-navigator" },
+  { src = "https://github.com/windwp/nvim-autopairs",             name = "autopairs" },
+  { src = "https://github.com/nvim-neotest/neotest",              name = "neotest" },
+  { src = "https://github.com/nvim-neotest/nvim-nio",             name = "nvim-nio" },
+  { src = "https://github.com/nvim-neotest/neotest-python",       name = "neotest-python" },
+  { src = "https://github.com/antoinemadec/FixCursorHold.nvim",   name = "fix-cursor-hold" },
+  { src = "https://github.com/mfussenegger/nvim-jdtls",           name = "jdtls" },
+  { src = "https://github.com/rcasia/neotest-java",               name = "neotest-java" },
 
   -- LSP & Autocompletado
   -- { src = "https://github.com/williamboman/mason.nvim", name = "mason" },
   -- { src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig" },
-  { src = "https://github.com/neovim/nvim-lspconfig",           name = "lspconfig" },
-  { src = "https://github.com/hrsh7th/nvim-cmp",                name = "cmp" },
-  { src = "https://github.com/hrsh7th/cmp-nvim-lsp",            name = "cmp-nvim-lsp" },
-  { src = "https://github.com/hrsh7th/cmp-buffer",              name = "cmp-buffer" },
-  { src = "https://github.com/hrsh7th/cmp-path",                name = "cmp-path" },
+  { src = "https://github.com/neovim/nvim-lspconfig",             name = "lspconfig" },
+  { src = "https://github.com/hrsh7th/nvim-cmp",                  name = "cmp" },
+  { src = "https://github.com/hrsh7th/cmp-nvim-lsp",              name = "cmp-nvim-lsp" },
+  { src = "https://github.com/hrsh7th/cmp-buffer",                name = "cmp-buffer" },
+  { src = "https://github.com/hrsh7th/cmp-path",                  name = "cmp-path" },
 })
 
--- =========================
 -- THEME
--- =========================
 require("catppuccin").setup({
   auto_integrations = true,
+  transparent_background = true,
 })
 vim.cmd("colorscheme catppuccin-mocha")
 --
@@ -49,46 +49,38 @@ vim.cmd("colorscheme catppuccin-mocha")
 -- require("tokyonight").setup({})
 -- vim.cmd("colorscheme tokyonight-storm")
 
--- =========================
--- TREESITTER
--- =========================
-require("nvim-treesitter.configs").setup({
-  ensure_installed = { "lua", "vim", "bash", "json", "python", "go", "c", "cpp", "markdown" },
-  highlight = { enable = true },
-  indent = { enable = true, disable = { "c", "cpp" }, },
-  modules = {},
-  sync_install = false,
-  ignore_install = {},
-  auto_install = true,
+-- TREE-SITTER-MANAGER
+require("tree-sitter-manager").setup({
+  -- Default Options
+  ensure_installed = { "python", "go", "c" }, -- list of parsers to install at the start of a neovim session
+  -- border = nil, -- border style for the window (e.g. "rounded", "single"), if nil, use the default border style defined by 'vim.o.winborder'. See :h 'winborder' for more info.
+  auto_install = true,                        -- if enabled, install missing parsers when editing a new file
+  -- highlight = true, -- treesitter highlighting is enabled by default
+  -- languages = {}, -- override or add new parser sources
+  -- parser_dir = vim.fn.stdpath("data") .. "/site/parser",
+  -- query_dir = vim.fn.stdpath("data") .. "/site/queries",
 })
 
--- =========================
 -- TELESCOPE
--- =========================
 require("telescope").setup({})
 
--- =========================
 -- AUTOPAIRS
--- =========================
 require("nvim-autopairs").setup({})
 
 require("neotest").setup({
   adapters = {
-    require("neotest-python")({})
+    require("neotest-python")({}),
+    require("neotest-java")({}),
   }
 })
 
--- =========================
 -- MASON
--- =========================
 -- require("mason").setup()
 -- require("mason-lspconfig").setup({
 -- 	ensure_installed = { "pyright", "ruff", "gopls", "clangd", "lua_ls", "stylua" },
 -- })
 
--- =========================
 -- CMP (autocompletado)
--- =========================
 local cmp = require("cmp")
 local cmp_lsp = require("cmp_nvim_lsp")
 local npairs = require("nvim-autopairs")
@@ -194,9 +186,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
   end,
 })
 
--- =========================
 -- DIAGNÓSTICOS
--- =========================
 vim.diagnostic.config({
   signs = {
     text = {
@@ -212,4 +202,31 @@ vim.diagnostic.config({
   virtual_lines = {
     current_line = true,
   },
+})
+
+-- JDTLS (Java)
+vim.api.nvim_create_autocmd("FileType", {
+  pattern = "java",
+  callback = function()
+    local jdtls = require("jdtls")
+
+    -- Directorio donde está instalado jdtls
+
+    -- Workspace único por proyecto (evita conflictos entre proyectos)
+    local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
+    local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+
+    jdtls.start_or_attach({
+      cmd = { "jdtls", "-data", workspace_dir },
+      root_dir = vim.fs.root(0, { "pom.xml", "build.gradle", ".git", "mvnw" }),
+      capabilities = capabilities,
+      settings = {
+        java = {
+          format = { enabled = true },
+          saveActions = { organizeImports = true },
+          completion = { favoriteStaticMembers = {} },
+        },
+      },
+    })
+  end,
 })
