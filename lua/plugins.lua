@@ -1,37 +1,39 @@
 -- ============================================================
---  plugins.lua - Neovim 0.12 (sin lazy)
+--  plugins.lua - Neovim 0.12 o superior (sin lazy)
 -- ============================================================
 
 -- PACK
 vim.pack.add({
 
   -- Tema
-  { src = "https://github.com/catppuccin/nvim",                   name = "catppuccin" },
-  { src = "https://github.com/rose-pine/neovim",                  name = "rose-pine" },
-  { src = "https://github.com/folke/tokyonight.nvim",             name = "tokyonight" },
+  { src = "https://github.com/catppuccin/nvim",                     name = "catppuccin" },
+  -- { src = "https://github.com/rose-pine/neovim",                    name = "rose-pine" },
+  -- { src = "https://github.com/folke/tokyonight.nvim",               name = "tokyonight" },
 
   -- Utilities
-  { src = "https://github.com/mbbill/undotree",                   name = "undotree" },
-  { src = "https://github.com/nvim-lua/plenary.nvim",             name = "plenary" },
-  { src = "https://github.com/nvim-telescope/telescope.nvim",     name = "telescope" },
-  { src = "https://github.com/romus204/tree-sitter-manager.nvim", name = "tree-sitter-manager" },
-  { src = "https://github.com/christoomey/vim-tmux-navigator",    name = "tmux-navigator" },
-  { src = "https://github.com/windwp/nvim-autopairs",             name = "autopairs" },
-  { src = "https://github.com/nvim-neotest/neotest",              name = "neotest" },
-  { src = "https://github.com/nvim-neotest/nvim-nio",             name = "nvim-nio" },
-  { src = "https://github.com/nvim-neotest/neotest-python",       name = "neotest-python" },
-  { src = "https://github.com/antoinemadec/FixCursorHold.nvim",   name = "fix-cursor-hold" },
-  { src = "https://github.com/mfussenegger/nvim-jdtls",           name = "jdtls" },
-  { src = "https://github.com/rcasia/neotest-java",               name = "neotest-java" },
+  { src = "https://github.com/mbbill/undotree",                     name = "undotree" },
+  { src = "https://github.com/nvim-lua/plenary.nvim",               name = "plenary" },
+  { src = "https://github.com/nvim-telescope/telescope.nvim",       name = "telescope" },
+  { src = "https://github.com/romus204/tree-sitter-manager.nvim",   name = "tree-sitter-manager" },
+  { src = "https://github.com/christoomey/vim-tmux-navigator",      name = "tmux-navigator" },
+  { src = "https://github.com/windwp/nvim-autopairs",               name = "autopairs" },
+  { src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "ibl" },
+  { src = "https://github.com/nvim-neotest/neotest",                name = "neotest" },
+  { src = "https://github.com/nvim-neotest/nvim-nio",               name = "nvim-nio" },
+  { src = "https://github.com/nvim-neotest/neotest-python",         name = "neotest-python" },
+  { src = "https://github.com/nvim-neotest/neotest-go",             name = "neotest-go" },
+  { src = "https://github.com/antoinemadec/FixCursorHold.nvim",     name = "fix-cursor-hold" },
+  { src = "https://github.com/mfussenegger/nvim-jdtls",             name = "jdtls" },
+  { src = "https://github.com/rcasia/neotest-java",                 name = "neotest-java" },
 
   -- LSP & Autocompletado
   -- { src = "https://github.com/williamboman/mason.nvim", name = "mason" },
   -- { src = "https://github.com/williamboman/mason-lspconfig.nvim", name = "mason-lspconfig" },
-  { src = "https://github.com/neovim/nvim-lspconfig",             name = "lspconfig" },
-  { src = "https://github.com/hrsh7th/nvim-cmp",                  name = "cmp" },
-  { src = "https://github.com/hrsh7th/cmp-nvim-lsp",              name = "cmp-nvim-lsp" },
-  { src = "https://github.com/hrsh7th/cmp-buffer",                name = "cmp-buffer" },
-  { src = "https://github.com/hrsh7th/cmp-path",                  name = "cmp-path" },
+  { src = "https://github.com/neovim/nvim-lspconfig",               name = "lspconfig" },
+  { src = "https://github.com/hrsh7th/nvim-cmp",                    name = "cmp" },
+  { src = "https://github.com/hrsh7th/cmp-nvim-lsp",                name = "cmp-nvim-lsp" },
+  { src = "https://github.com/hrsh7th/cmp-buffer",                  name = "cmp-buffer" },
+  { src = "https://github.com/hrsh7th/cmp-path",                    name = "cmp-path" },
 })
 
 -- THEME
@@ -71,9 +73,16 @@ require("neotest").setup({
   adapters = {
     require("neotest-python")({}),
     require("neotest-java")({}),
+    require("neotest-go")({}),
   }
 })
 
+require("ibl").setup({
+  indent = {
+    char = "▏", -- más fino que "│"
+  },
+})
+vim.api.nvim_set_hl(0, "IblIndent", { fg = "#313244" })
 -- MASON
 -- require("mason").setup()
 -- require("mason-lspconfig").setup({
