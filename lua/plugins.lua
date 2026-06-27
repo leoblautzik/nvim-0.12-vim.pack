@@ -38,8 +38,14 @@ vim.pack.add({
 
 -- THEME
 require("catppuccin").setup({
-  auto_integrations = true,
   transparent_background = true,
+  integrations = {
+    cmp = true,
+    telescope = true,
+    native_lsp = { enabled = true },
+    treesitter = true,
+    indent_blankline = { enabled = true },
+  },
 })
 vim.cmd("colorscheme catppuccin-mocha")
 --
