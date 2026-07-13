@@ -159,18 +159,34 @@ end, { desc = "Cerrar panel runner" })
 --------------------------------------------------------------------------------
 --- Telescope keymaps
 --------------------------------------------------------------------------------
-map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Buscar archivos" })
-map("n", "<leader>fw", "<cmd>Telescope grep_string<CR>", { desc = "Buscar texto" })
-map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Buscar grep" })
-map("n", "<leader><leader>", "<cmd>Telescope buffers<CR>", { desc = "Buffers abiertos" })
-map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Ayuda" })
-map("n", "<leader>fk", "<cmd>Telescope keymaps<CR>", { desc = "Search keymaps" })
-map("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Archivos recientes" })
-map("n", "<leader>fd", "<cmd>Telescope diagnostics<CR>", { desc = "Buscar diagnósticos" })
-map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
-map("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Cambios sin commit" })
-map("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", { desc = "Ramas" })
+-- map("n", "<leader>ff", "<cmd>Telescope find_files<CR>", { desc = "Buscar archivos" })
+-- map("n", "<leader>fw", "<cmd>Telescope grep_string<CR>", { desc = "Buscar texto" })
+-- map("n", "<leader>fg", "<cmd>Telescope live_grep<CR>", { desc = "Buscar grep" })
+-- map("n", "<leader><leader>", "<cmd>Telescope buffers<CR>", { desc = "Buffers abiertos" })
+-- map("n", "<leader>fh", "<cmd>Telescope help_tags<CR>", { desc = "Ayuda" })
+-- map("n", "<leader>fk", "<cmd>Telescope keymaps<CR>", { desc = "Search keymaps" })
+-- map("n", "<leader>fr", "<cmd>Telescope oldfiles<CR>", { desc = "Archivos recientes" })
+-- map("n", "<leader>fd", "<cmd>Telescope diagnostics<CR>", { desc = "Buscar diagnósticos" })
+-- map("n", "<leader>gc", "<cmd>Telescope git_commits<CR>", { desc = "Commits" })
+-- map("n", "<leader>gs", "<cmd>Telescope git_status<CR>", { desc = "Cambios sin commit" })
+-- map("n", "<leader>gb", "<cmd>Telescope git_branches<CR>", { desc = "Ramas" })
 --------------------------------------------------------------------------------
+---
+---
+local fzf = require("fzf-lua")
+
+map("n", "<leader>ff", fzf.files, { desc = "Buscar archivos" })
+map("n", "<leader>fw", fzf.grep_cword, { desc = "Buscar texto" })
+map("n", "<leader>fg", fzf.live_grep, { desc = "Buscar grep" })
+map("n", "<leader><leader>", fzf.buffers, { desc = "Buffers abiertos" })
+map("n", "<leader>fh", fzf.help_tags, { desc = "Ayuda" })
+map("n", "<leader>fk", fzf.keymaps, { desc = "Search keymaps" })
+map("n", "<leader>fr", fzf.oldfiles, { desc = "Archivos recientes" })
+map("n", "<leader>fd", fzf.diagnostics_document, { desc = "Buscar diagnósticos" })
+map("n", "<leader>gc", fzf.git_commits, { desc = "Commits" })
+map("n", "<leader>gs", fzf.git_status, { desc = "Cambios sin commit" })
+map("n", "<leader>gb", fzf.git_branches, { desc = "Ramas" })
+---
 -- Alternar tema claro/orcuro
 --
 vim.keymap.set("n", "<leader>bg", function()
