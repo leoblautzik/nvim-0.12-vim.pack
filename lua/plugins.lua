@@ -12,7 +12,7 @@ vim.pack.add({
   { src = "https://github.com/mbbill/undotree",                     name = "undotree" },
   { src = "https://github.com/nvim-lua/plenary.nvim",               name = "plenary" },
   { src = "https://github.com/ibhagwan/fzf-lua",                    name = "fzf-lua" },
-  { src = "https://github.com/nvim-treesitter/nvim-treesitter",     name = "nvim-tree-sitter" },
+  { src = "https://github.com/romus204/tree-sitter-manager.nvim",   name = "tree-sitter-manager" },
   { src = "https://github.com/christoomey/vim-tmux-navigator",      name = "tmux-navigator" },
   { src = "https://github.com/windwp/nvim-autopairs",               name = "autopairs" },
   { src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "ibl" },
@@ -22,7 +22,6 @@ vim.pack.add({
   { src = "https://github.com/nvim-neotest/neotest-go",             name = "neotest-go" },
   { src = "https://github.com/antoinemadec/FixCursorHold.nvim",     name = "fix-cursor-hold" },
   { src = "https://github.com/mfussenegger/nvim-jdtls",             name = "jdtls" },
-  { src = "https://github.com/rcasia/neotest-java",                 name = "neotest-java" },
 
   -- LSP & Autocompletado
   { src = "https://github.com/neovim/nvim-lspconfig",               name = "lspconfig" },
@@ -46,16 +45,35 @@ require("catppuccin").setup({
 vim.cmd("colorscheme catppuccin-mocha")
 
 -- TREE-SITTER
-require('nvim-treesitter').setup({
-  install_dir = vim.fn.stdpath('data') .. '/site'
+require("tree-sitter-manager").setup({
+  ensure_installed = {
+    "lua",
+    "zsh",
+    "java",
+    "markdown",
+    "csv",
+    "kitty",
+    "tsv",
+    "toml",
+    "gitcommit",
+    "c",
+    "cpp",
+    "python",
+    "go",
+    "gitignore",
+    "diff",
+    "markdown_inline"
+  },
+  auto_install = true,
 })
-require('nvim-treesitter').install({ "lua", "zsh", "java", "markdown", "csv", "kitty",
-  "tsv", "toml", "gitcommit", "c", "python", "go", "gitignore", "diff", "markdown_inline" })
 
 vim.api.nvim_create_autocmd('FileType', {
   pattern = '*',
-  callback = function()
-    pcall(vim.treesitter.start)
+  callback = function(args)
+    local ok, parser = pcall(vim.treesitter.get_parser, args.buf)
+    if ok and parser then
+      parser:parse()
+    end
   end,
 })
 
@@ -78,7 +96,6 @@ require("nvim-autopairs").setup({})
 require("neotest").setup({
   adapters = {
     require("neotest-python")({}),
-    require("neotest-java")({}),
     require("neotest-go")({}),
   }
 })
@@ -114,7 +131,8 @@ cmp.setup({
 
 -- Definición de LSPs (usando vim.lsp.config)
 vim.lsp.config.lua_ls = {
-  cmd = { "lua-language-server" },
+  cmd = { "lua-language-server",
+    '--logpath=' .. vim.fn.stdpath('cache') .. '/lua-ls-log', },
   filetypes = { "lua" },
   settings = {
     Lua = {
@@ -169,33 +187,66 @@ vim.lsp.enable("clangd")
 vim.lsp.enable("ruff")
 
 -- Autocmd para formateo automático si el servidor lo soporta
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--   callback = function(args)
+--     local client = vim.lsp.get_client_by_id(args.data.client_id)
+--     -- Pyright NO formatea
+--     if client and client.name == "pyright" and client.server_capabilities then
+--       client.server_capabilities.documentFormattingProvider = false
+--     end
+--     if client and client.server_capabilities.documentFormattingProvider then
+--       vim.api.nvim_buf_create_user_command(args.buf, "Format", function()
+--         vim.lsp.buf.format({
+--           bufnr = args.buf,
+--           timeout_ms = 2000,
+--         })
+--       end, {})
+--       vim.api.nvim_create_autocmd("BufWritePre", {
+--         buffer = args.buf,
+--         callback = function()
+--           vim.lsp.buf.format({
+--             bufnr = args.buf,
+--             timeout_ms = 2000,
+--           })
+--         end,
+--       })
+--     end
+--   end,
+-- })
+-- Formateo al guardar (evita duplicar el autocmd por buffer)
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    -- Pyright NO formatea
-    if client and client.name == "pyright" and client.server_capabilities then
-      client.server_capabilities.documentFormattingProvider = false
+    local bufnr = args.buf
+    if vim.b[bufnr].format_on_save_configured then return end
+
+    local function has_formatter()
+      for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+        if c.name ~= "pyright" and c:supports_method("textDocument/formatting") then
+          return true
+        end
+      end
+      return false
     end
-    if client and client.server_capabilities.documentFormattingProvider then
-      vim.api.nvim_buf_create_user_command(args.buf, "Format", function()
+
+    if has_formatter() then
+      vim.b[bufnr].format_on_save_configured = true
+
+      local function do_format()
         vim.lsp.buf.format({
-          bufnr = args.buf,
+          bufnr = bufnr,
           timeout_ms = 2000,
+          filter = function(c) return c.name ~= "pyright" end,
         })
-      end, {})
+      end
+
+      vim.api.nvim_buf_create_user_command(bufnr, "Format", do_format, {})
       vim.api.nvim_create_autocmd("BufWritePre", {
-        buffer = args.buf,
-        callback = function()
-          vim.lsp.buf.format({
-            bufnr = args.buf,
-            timeout_ms = 2000,
-          })
-        end,
+        buffer = bufnr,
+        callback = do_format,
       })
     end
   end,
 })
-
 -- DIAGNÓSTICOS
 vim.diagnostic.config({
   signs = {
