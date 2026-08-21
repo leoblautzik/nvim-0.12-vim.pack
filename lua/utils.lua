@@ -224,8 +224,7 @@ function M.run_test_under_cursor()
     return
   end
 
-  local ts_utils = require("nvim-treesitter.ts_utils")
-  local node = ts_utils.get_node_at_cursor()
+  local node = vim.treesitter.get_node()
   local test_name = nil
 
   while node do
@@ -303,8 +302,7 @@ function M.run_pytest_under_cursor()
     return
   end
 
-  local ts_utils = require("nvim-treesitter.ts_utils")
-  local node = ts_utils.get_node_at_cursor()
+  local node = vim.treesitter.get_node()
   local test_name = nil
   local class_name = nil
 
