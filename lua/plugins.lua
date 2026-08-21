@@ -187,33 +187,66 @@ vim.lsp.enable("clangd")
 vim.lsp.enable("ruff")
 
 -- Autocmd para formateo automático si el servidor lo soporta
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--   callback = function(args)
+--     local client = vim.lsp.get_client_by_id(args.data.client_id)
+--     -- Pyright NO formatea
+--     if client and client.name == "pyright" and client.server_capabilities then
+--       client.server_capabilities.documentFormattingProvider = false
+--     end
+--     if client and client.server_capabilities.documentFormattingProvider then
+--       vim.api.nvim_buf_create_user_command(args.buf, "Format", function()
+--         vim.lsp.buf.format({
+--           bufnr = args.buf,
+--           timeout_ms = 2000,
+--         })
+--       end, {})
+--       vim.api.nvim_create_autocmd("BufWritePre", {
+--         buffer = args.buf,
+--         callback = function()
+--           vim.lsp.buf.format({
+--             bufnr = args.buf,
+--             timeout_ms = 2000,
+--           })
+--         end,
+--       })
+--     end
+--   end,
+-- })
+-- Formateo al guardar (evita duplicar el autocmd por buffer)
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
-    local client = vim.lsp.get_client_by_id(args.data.client_id)
-    -- Pyright NO formatea
-    if client and client.name == "pyright" and client.server_capabilities then
-      client.server_capabilities.documentFormattingProvider = false
+    local bufnr = args.buf
+    if vim.b[bufnr].format_on_save_configured then return end
+
+    local function has_formatter()
+      for _, c in ipairs(vim.lsp.get_clients({ bufnr = bufnr })) do
+        if c.name ~= "pyright" and c:supports_method("textDocument/formatting") then
+          return true
+        end
+      end
+      return false
     end
-    if client and client.server_capabilities.documentFormattingProvider then
-      vim.api.nvim_buf_create_user_command(args.buf, "Format", function()
+
+    if has_formatter() then
+      vim.b[bufnr].format_on_save_configured = true
+
+      local function do_format()
         vim.lsp.buf.format({
-          bufnr = args.buf,
+          bufnr = bufnr,
           timeout_ms = 2000,
+          filter = function(c) return c.name ~= "pyright" end,
         })
-      end, {})
+      end
+
+      vim.api.nvim_buf_create_user_command(bufnr, "Format", do_format, {})
       vim.api.nvim_create_autocmd("BufWritePre", {
-        buffer = args.buf,
-        callback = function()
-          vim.lsp.buf.format({
-            bufnr = args.buf,
-            timeout_ms = 2000,
-          })
-        end,
+        buffer = bufnr,
+        callback = do_format,
       })
     end
   end,
 })
-
 -- DIAGNÓSTICOS
 vim.diagnostic.config({
   signs = {
