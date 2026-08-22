@@ -186,33 +186,6 @@ vim.lsp.enable("gopls")
 vim.lsp.enable("clangd")
 vim.lsp.enable("ruff")
 
--- Autocmd para formateo automático si el servidor lo soporta
--- vim.api.nvim_create_autocmd("LspAttach", {
---   callback = function(args)
---     local client = vim.lsp.get_client_by_id(args.data.client_id)
---     -- Pyright NO formatea
---     if client and client.name == "pyright" and client.server_capabilities then
---       client.server_capabilities.documentFormattingProvider = false
---     end
---     if client and client.server_capabilities.documentFormattingProvider then
---       vim.api.nvim_buf_create_user_command(args.buf, "Format", function()
---         vim.lsp.buf.format({
---           bufnr = args.buf,
---           timeout_ms = 2000,
---         })
---       end, {})
---       vim.api.nvim_create_autocmd("BufWritePre", {
---         buffer = args.buf,
---         callback = function()
---           vim.lsp.buf.format({
---             bufnr = args.buf,
---             timeout_ms = 2000,
---           })
---         end,
---       })
---     end
---   end,
--- })
 -- Formateo al guardar (evita duplicar el autocmd por buffer)
 vim.api.nvim_create_autocmd("LspAttach", {
   callback = function(args)
@@ -247,6 +220,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
   end,
 })
+
 -- DIAGNÓSTICOS
 vim.diagnostic.config({
   signs = {
@@ -288,3 +262,8 @@ vim.api.nvim_create_autocmd("FileType", {
     })
   end,
 })
+
+-- Actualizar plugins
+vim.api.nvim_create_user_command('PackUpdate', function()
+  vim.pack.update()
+end, {})

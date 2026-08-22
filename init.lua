@@ -1,5 +1,4 @@
 -- init.lua con solo requires
--- vim.g.loaded_fzf = 1
 require("options")  -- Primero: opciones básicas
 require("plugins")  -- Segundo: instalar y configurar plugins
 require("keymaps")  -- Después de plugins si usan funciones de plugins

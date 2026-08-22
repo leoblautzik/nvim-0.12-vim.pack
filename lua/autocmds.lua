@@ -138,7 +138,3 @@ vim.api.nvim_create_autocmd("BufNewFile", {
     vim.api.nvim_win_set_cursor(0, { 4, 8 })
   end,
 })
-
-vim.api.nvim_create_user_command('PackUpdate', function()
-  vim.pack.update()
-end, {})

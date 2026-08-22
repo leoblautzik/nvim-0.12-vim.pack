@@ -71,3 +71,4 @@ o.guicursor = {
 }
 
 o.laststatus = 2
+vim.g.netrw_liststyle = 3
