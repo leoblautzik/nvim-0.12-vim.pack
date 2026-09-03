@@ -145,6 +145,14 @@ local function run_cmd_output(cmd, cwd)
 end
 
 ----------------------------------------------------------------------
+-- PYTHON: Detectar si un archivo es de test (test_*.py o *_test.py)
+----------------------------------------------------------------------
+local function is_pytest_file(path)
+  local tail = vim.fn.fnamemodify(path, ":t")
+  return tail:match("^test_.+%.py$") ~= nil or tail:match(".+_test%.py$") ~= nil
+end
+
+----------------------------------------------------------------------
 -- Ejecutar archivo actual según su tipo
 ----------------------------------------------------------------------
 function M.run_file()
@@ -169,7 +177,7 @@ function M.run_file()
       run_cmd_output({ out }, dir)
     end
   elseif ft == "python" then
-    if file:match("_test%.py$") then
+    if is_pytest_file(file) then
       run_cmd_output({ "pytest", file }, dir)
     else
       run_cmd_output({ "python3", file }, dir)
@@ -297,8 +305,8 @@ function M.run_pytest_under_cursor()
   end
 
   local file_name = vim.api.nvim_buf_get_name(0)
-  if not file_name:match("_test%.py$") then
-    print("Este comando solo funciona en archivos *_test.py")
+  if not is_pytest_file(file_name) then
+    print("Este comando solo funciona en archivos test_*.py o *_test.py")
     return
   end
 
@@ -345,8 +353,8 @@ function M.run_pytests_in_file()
   end
 
   local file_name = vim.api.nvim_buf_get_name(0)
-  if not file_name:match("_test%.py$") then
-    print("Este comando solo funciona en archivos *_test.py")
+  if not is_pytest_file(file_name) then
+    print("Este comando solo funciona en archivos test_*.py o *_test.py")
     return
   end
 
