@@ -117,16 +117,17 @@ cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
 local capabilities = cmp_lsp.default_capabilities()
 
 cmp.setup({
+  preselect = cmp.PreselectMode.None,
   completion = { completeopt = "menu,menuone,noinsert" },
   mapping = {
     ["<C-Space>"] = cmp.mapping.complete(),
-    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+    ["<CR>"] = cmp.mapping.confirm({ select = false }),
     ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
     ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
     ["<Down>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Select }),
     ["<Up>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Select }),
   },
-  sources = { { name = "nvim_lsp" }, { name = "buffer" }, { name = "path" } },
+  sources = { { name = "nvim_lsp" }, { name = "buffer", keyword_length = 4 }, { name = "path" } },
 })
 
 -- Definición de LSPs (usando vim.lsp.config)
@@ -218,6 +219,24 @@ vim.api.nvim_create_autocmd("LspAttach", {
         callback = do_format,
       })
     end
+  end,
+})
+
+-- Keymaps de LSP al adjuntarse
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local opts = { buffer = bufnr }
+
+    -- vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "<leader>gd", require("fzf-lua").lsp_definitions, opts)
+    vim.keymap.set("n", "<leader>gr", require("fzf-lua").lsp_references, opts)
+    -- vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
   end,
 })
 
