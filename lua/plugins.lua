@@ -6,30 +6,30 @@
 vim.pack.add({
 
   -- Tema
-  { src = "https://github.com/catppuccin/nvim",                     name = "catppuccin" },
+  { src = "https://github.com/catppuccin/nvim",                   name = "catppuccin" },
 
   -- Utilities
-  { src = "https://github.com/mbbill/undotree",                     name = "undotree" },
-  { src = "https://github.com/nvim-lua/plenary.nvim",               name = "plenary" },
-  { src = "https://github.com/ibhagwan/fzf-lua",                    name = "fzf-lua" },
-  { src = "https://github.com/romus204/tree-sitter-manager.nvim",   name = "tree-sitter-manager" },
-  { src = "https://github.com/christoomey/vim-tmux-navigator",      name = "tmux-navigator" },
-  { src = "https://github.com/windwp/nvim-autopairs",               name = "autopairs" },
-  { src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "ibl" },
-  { src = "https://github.com/nvim-neotest/neotest",                name = "neotest" },
-  { src = "https://github.com/nvim-neotest/nvim-nio",               name = "nvim-nio" },
-  { src = "https://github.com/nvim-neotest/neotest-python",         name = "neotest-python" },
-  { src = "https://github.com/nvim-neotest/neotest-go",             name = "neotest-go" },
-  { src = "https://github.com/antoinemadec/FixCursorHold.nvim",     name = "fix-cursor-hold" },
-  { src = "https://github.com/mfussenegger/nvim-jdtls",             name = "jdtls" },
+  { src = "https://github.com/mbbill/undotree",                   name = "undotree" },
+  { src = "https://github.com/nvim-lua/plenary.nvim",             name = "plenary" },
+  { src = "https://github.com/ibhagwan/fzf-lua",                  name = "fzf-lua" },
+  { src = "https://github.com/romus204/tree-sitter-manager.nvim", name = "tree-sitter-manager" },
+  { src = "https://github.com/christoomey/vim-tmux-navigator",    name = "tmux-navigator" },
+  { src = "https://github.com/windwp/nvim-autopairs",             name = "autopairs" },
+  -- { src = "https://github.com/lukas-reineke/indent-blankline.nvim", name = "ibl" },
+  { src = "https://github.com/nvim-neotest/neotest",              name = "neotest" },
+  { src = "https://github.com/nvim-neotest/nvim-nio",             name = "nvim-nio" },
+  { src = "https://github.com/nvim-neotest/neotest-python",       name = "neotest-python" },
+  { src = "https://github.com/nvim-neotest/neotest-go",           name = "neotest-go" },
+  { src = "https://github.com/antoinemadec/FixCursorHold.nvim",   name = "fix-cursor-hold" },
+  { src = "https://github.com/mfussenegger/nvim-jdtls",           name = "jdtls" },
 
   -- LSP & Autocompletado
-  { src = "https://github.com/neovim/nvim-lspconfig",               name = "lspconfig" },
-  { src = "https://github.com/hrsh7th/nvim-cmp",                    name = "cmp" },
-  { src = "https://github.com/hrsh7th/cmp-nvim-lsp",                name = "cmp-nvim-lsp" },
-  { src = "https://github.com/hrsh7th/cmp-buffer",                  name = "cmp-buffer" },
-  { src = "https://github.com/hrsh7th/cmp-path",                    name = "cmp-path" },
-  { src = "https://github.com/lewis6991/gitsigns.nvim",             name = "gitsigns" },
+  { src = "https://github.com/neovim/nvim-lspconfig",             name = "lspconfig" },
+  { src = "https://github.com/hrsh7th/nvim-cmp",                  name = "cmp" },
+  { src = "https://github.com/hrsh7th/cmp-nvim-lsp",              name = "cmp-nvim-lsp" },
+  { src = "https://github.com/hrsh7th/cmp-buffer",                name = "cmp-buffer" },
+  { src = "https://github.com/hrsh7th/cmp-path",                  name = "cmp-path" },
+  { src = "https://github.com/lewis6991/gitsigns.nvim",           name = "gitsigns" },
 })
 
 -- THEME
@@ -42,7 +42,13 @@ require("catppuccin").setup({
     indent_blankline = { enabled = true },
   },
 })
-vim.cmd("colorscheme catppuccin-mocha")
+local theme = os.getenv("NVIM_THEME") or "catppuccin-mocha"
+if theme == "catppuccin-latte" then
+  vim.cmd("colorscheme catppuccin-latte")
+else
+  vim.cmd("colorscheme catppuccin-mocha")
+end
+
 
 -- TREE-SITTER
 require("tree-sitter-manager").setup({
@@ -100,12 +106,12 @@ require("neotest").setup({
   }
 })
 
-require("ibl").setup({
-  indent = {
-    char = "▏", -- más fino que "│"
-  },
-})
-vim.api.nvim_set_hl(0, "IblIndent", { fg = "#313244" })
+-- require("ibl").setup({
+--   indent = {
+--     char = "▏", -- más fino que "│"
+--   },
+-- })
+-- vim.api.nvim_set_hl(0, "IblIndent", { fg = "#313244" })
 
 -- CMP (autocompletado)
 local cmp = require("cmp")
@@ -219,24 +225,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
         callback = do_format,
       })
     end
-  end,
-})
-
--- Keymaps de LSP al adjuntarse
-vim.api.nvim_create_autocmd("LspAttach", {
-  callback = function(args)
-    local bufnr = args.buf
-    local opts = { buffer = bufnr }
-
-    -- vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
-    vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, opts)
-    vim.keymap.set("n", "<leader>gd", require("fzf-lua").lsp_definitions, opts)
-    vim.keymap.set("n", "<leader>gr", require("fzf-lua").lsp_references, opts)
-    -- vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
-    vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, opts)
-    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
-    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
-    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
   end,
 })
 

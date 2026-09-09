@@ -128,7 +128,7 @@ local function run_cmd_output(cmd, cwd)
 
   -- abrir terminal según tipo de cmd
   if type(cmd) == "table" then
-    vim.cmd({ cmd = "terminal", args = cmd })
+    vim.fn.jobstart(cmd, { term = true })
   else
     vim.cmd("terminal " .. cmd)
   end
