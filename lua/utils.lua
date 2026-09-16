@@ -152,6 +152,27 @@ local function is_pytest_file(path)
   return tail:match("^test_.+%.py$") ~= nil or tail:match(".+_test%.py$") ~= nil
 end
 
+-- A partir de un archivo de test (test_x.py / x_test.py), intenta adivinar
+-- el nombre del archivo fuente que cubre, si existe en el mismo directorio.
+local function guess_source_file(path)
+  local dir = vim.fn.fnamemodify(path, ":h")
+  local tail = vim.fn.fnamemodify(path, ":t")
+  local base = tail:match("^test_(.+%.py)$") or tail:match("^(.+)_test%.py$")
+
+  if not base then
+    return nil
+  end
+  if not base:match("%.py$") then
+    base = base .. ".py"
+  end
+
+  local candidate = dir .. "/" .. base
+  if vim.fn.filereadable(candidate) == 1 then
+    return base
+  end
+  return nil
+end
+
 ----------------------------------------------------------------------
 -- Ejecutar archivo actual según su tipo
 ----------------------------------------------------------------------
@@ -347,7 +368,8 @@ end
 ----------------------------------------------------------------------
 -- PYTHON: Ejecutar todos los tests del archivo actual
 ----------------------------------------------------------------------
-function M.run_pytests_in_file()
+-- with_coverage = true corre bajo `coverage` y muestra el reporte al final
+function M.run_pytests_in_file(with_coverage)
   if vim.bo.modified then
     vim.cmd("write")
   end
@@ -359,7 +381,24 @@ function M.run_pytests_in_file()
   end
 
   local file_dir = vim.fn.expand("%:p:h")
-  run_cmd_output({ "pytest", "-v", file_name }, file_dir)
+
+  if not with_coverage then
+    run_cmd_output({ "pytest", "-v", file_name }, file_dir)
+    return
+  end
+
+  local target = vim.fn.fnamemodify(file_name, ":t")
+  local source = guess_source_file(file_name)
+  local report_cmd = source and ("coverage report -m " .. vim.fn.shellescape(source))
+    or "coverage report -m"
+
+  local cmd_str = string.format(
+    "coverage run --branch -m pytest -v %s && %s",
+    vim.fn.shellescape(target),
+    report_cmd
+  )
+
+  run_cmd_output({ "sh", "-c", cmd_str }, file_dir)
 end
 
 return M

@@ -227,6 +227,15 @@ vim.api.nvim_create_autocmd("LspAttach", {
     end
   end,
 })
+-- Para que ruff autocorrija los imports
+vim.api.nvim_create_autocmd("BufWritePost", {
+  pattern = "*.py",
+  callback = function(args)
+    local filename = vim.api.nvim_buf_get_name(args.buf)
+    vim.fn.system({ "ruff", "check", "--fix", "--quiet", filename })
+    vim.cmd("checktime")
+  end,
+})
 
 -- DIAGNÓSTICOS
 vim.diagnostic.config({
@@ -244,6 +253,24 @@ vim.diagnostic.config({
     current_line = true,
   },
 })
+-- Keymaps de LSP al adjuntarse
+vim.api.nvim_create_autocmd("LspAttach", {
+  callback = function(args)
+    local bufnr = args.buf
+    local opts = { buffer = bufnr }
+
+    -- vim.keymap.set("n", "<leader>gd", vim.lsp.buf.definition, opts)
+    vim.keymap.set("n", "<leader>gD", vim.lsp.buf.declaration, opts)
+    vim.keymap.set("n", "<leader>gd", require("fzf-lua").lsp_definitions, opts)
+    vim.keymap.set("n", "<leader>gr", require("fzf-lua").lsp_references, opts)
+    -- vim.keymap.set("n", "<leader>gr", vim.lsp.buf.references, opts)
+    vim.keymap.set("n", "<leader>gi", vim.lsp.buf.implementation, opts)
+    vim.keymap.set("n", "K", vim.lsp.buf.hover, opts)
+    vim.keymap.set("n", "<leader>rn", vim.lsp.buf.rename, opts)
+    vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, opts)
+  end,
+})
+
 
 -- JDTLS (Java)
 vim.api.nvim_create_autocmd("FileType", {

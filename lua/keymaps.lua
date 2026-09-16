@@ -145,6 +145,8 @@ end, { desc = "Go: tests archivo (verbose)" })
 -- Python Test
 map("n", "<leader>tpn", utils.run_pytest_under_cursor, { desc = "Py: test bajo cursor" })
 map("n", "<leader>tpa", utils.run_pytests_in_file, { desc = "Py: todos los tests del archivo" })
+--vim.keymap.set("n", "<leader>tp", function() require("utils").run_pytests_in_file() end)
+map("n", "<leader>tpc", function() require("utils").run_pytests_in_file(true) end)
 
 -- Cerrar panel de ejecución
 map("n", "<leader>ec", function()
